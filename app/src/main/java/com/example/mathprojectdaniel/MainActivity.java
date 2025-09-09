@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private  Button checkBtn;
     private Button saveBtn;
     private Button showAllUsersBtn;
+    private Exercise exercise;
     private int answer;
     private int score;
+    private Toast toaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         checkBtn = findViewById(R.id.check);
         saveBtn = findViewById(R.id.save);
         showAllUsersBtn = findViewById(R.id.showAllUsers);
+        exercise = new Exercise(this);
+        toaster = new Toast(this);
+        toaster.setDuration(Toast.LENGTH_SHORT);
         answer = 0;
         score = 1;
     }
@@ -62,46 +68,29 @@ public class MainActivity extends AppCompatActivity {
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int mana1 = randInt(9);
-                int mana2 = randInt(9);
-                answer = mana1 * mana2;
-                mana1TV.setText(Integer.toString(mana1));
-                mana2TV.setText(Integer.toString(mana2));
-                checkBtn.setEnabled(true);
-                answerET.setText("");
+                exercise.easy();
             }
         });
         normalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int mana1 = randInt(9);
-                int mana2 = randInt(20);
-                answer = mana1 * mana2;
-                mana1TV.setText(mana1+"");
-                mana2TV.setText(Integer.toString(mana2));
-                checkBtn.setEnabled(true);
-                answerET.setText("");
+                exercise.normal();
+                //mana1TV.setText(mana1+"");
+                //mana2TV.setText(mana2+"");
+                //checkBtn.setEnabled(true);
+                //answerET.setText("");
             }
         });
         hardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int mana1 = randInt(9);
-                int mana2 = randInt(99);
-                answer = mana1 * mana2;
-                mana1TV.setText(Integer.toString(mana1));
-                mana2TV.setText(Integer.toString(mana2));
-                checkBtn.setEnabled(true);
-                answerET.setText("");
+                exercise.hard();
             }
         });
         checkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(answer == Integer.parseInt(answerET.getText().toString())){
-                    scoreTV.setText(Integer.toString(score++));
-                    checkBtn.setEnabled(false);
-                }
+                exercise.check(Integer.parseInt(answerET.getText().toString()));
             }
         });
         saveBtn.setOnClickListener(new View.OnClickListener() {
