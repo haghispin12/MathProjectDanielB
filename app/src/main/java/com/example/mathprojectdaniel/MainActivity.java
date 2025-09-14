@@ -13,7 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private TextView scoreTV;
     private Button easyBtn;
@@ -25,9 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private  Button checkBtn;
     private Button saveBtn;
     private Button showAllUsersBtn;
+    public ExerciseListener exerciseListener;
     private Exercise exercise;
-    private int answer;
-    private int score;
     private Toast toaster;
 
     @Override
@@ -44,9 +43,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         CreateOnClickListeners();
     }
-    public int randInt(int num){
-        return (int)(Math.random() * (num - 1) + 1);
-    }
+
     public void init(){
         scoreTV = findViewById(R.id.score);
         easyBtn = findViewById(R.id.easy);
@@ -58,11 +55,28 @@ public class MainActivity extends AppCompatActivity {
         checkBtn = findViewById(R.id.check);
         saveBtn = findViewById(R.id.save);
         showAllUsersBtn = findViewById(R.id.showAllUsers);
-        exercise = new Exercise(this);
+        exerciseListener = new ExerciseListener() {
+            @Override
+            public void setManas(int mana1, int mana2) {
+                mana1TV.setText(mana1 + "");
+                mana2TV.setText(mana2 + "");
+                checkBtn.setEnabled(true);
+            }
+            @Override
+            public void correct(int current){
+                scoreTV.setText(current+"");
+                checkBtn.setEnabled(false);
+                toaster.setText("Correct!");
+                toaster.show();
+            }
+            public void incorrect(){
+                toaster.setText("Wrong... Try Again");
+                toaster.show();
+            }
+        };
+        exercise = new Exercise(this,exerciseListener);
         toaster = new Toast(this);
         toaster.setDuration(Toast.LENGTH_SHORT);
-        answer = 0;
-        score = 1;
     }
     public void CreateOnClickListeners(){
         easyBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 exercise.normal();
-                //mana1TV.setText(mana1+"");
-                //mana2TV.setText(mana2+"");
-                //checkBtn.setEnabled(true);
-                //answerET.setText("");
             }
         });
         hardBtn.setOnClickListener(new View.OnClickListener() {
