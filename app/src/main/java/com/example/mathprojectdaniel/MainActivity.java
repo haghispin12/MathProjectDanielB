@@ -1,5 +1,6 @@
 package com.example.mathprojectdaniel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,9 +29,10 @@ public class MainActivity extends AppCompatActivity{
     private  Button checkBtn;
     private Button saveBtn;
     private Button showAllUsersBtn;
-    public ExerciseListener exerciseListener;
-    private Exercise exercise;
-    private Toast toaster;
+    protected ExerciseListener exerciseListener;
+    protected Exercise exercise;
+    protected Toast toaster;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity{
 
         init();
         CreateOnClickListeners();
+        //startLogin();
     }
 
     public void init(){
@@ -55,6 +61,8 @@ public class MainActivity extends AppCompatActivity{
         checkBtn = findViewById(R.id.check);
         saveBtn = findViewById(R.id.save);
         showAllUsersBtn = findViewById(R.id.showAllUsers);
+        user = new User(getIntent().getStringExtra("username"));
+
         exerciseListener = new ExerciseListener() {
             @Override
             public void setManas(int mana1, int mana2) {
@@ -74,10 +82,20 @@ public class MainActivity extends AppCompatActivity{
                 toaster.show();
             }
         };
-        exercise = new Exercise(this,exerciseListener);
+        exercise = new Exercise(exerciseListener, user);
         toaster = new Toast(this);
         toaster.setDuration(Toast.LENGTH_SHORT);
     }
+    /*public void startLogin(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+        new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                checkUserName(result.getData().getStringExtra("username", ));
+            }
+        }).launch(intent);
+    }*/
     public void CreateOnClickListeners(){
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,4 +134,17 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+    /*public User checkUserName(String name){
+        User user = null;
+        for (int i=0; i<userCount; i++){
+            if (name.equals(users[i].getName())){
+                user = users[i];
+                return user;
+            }
+        }
+        user = new User("name");
+        users[userCount] = user;
+        userCount++;
+        return user;
+    }*/
 }

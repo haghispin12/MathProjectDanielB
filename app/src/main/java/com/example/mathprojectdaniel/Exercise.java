@@ -1,27 +1,23 @@
 package com.example.mathprojectdaniel;
 
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.Random;
 
 public class Exercise {
-    private int score;
     private int answer;
-    private Toast toaster;
     private int currentDiff;
     private ExerciseListener exerciseListener;
-    public Exercise(MainActivity context, ExerciseListener EL){
-        score = 0;
+    private User user;
+    public Exercise(ExerciseListener EL, User user){
         answer = 0;
         currentDiff = 0;
-        toaster = new Toast(context);
-        toaster.setDuration(Toast.LENGTH_SHORT);
         exerciseListener = EL;
+        this.user = user;
     }
     public int randInt(int num){
         Random random = new Random();
-        return random.nextInt(num);
+        return random.nextInt(num)+1;
     }
     public void easy() {
         int mana1 = randInt(9);
@@ -46,12 +42,13 @@ public class Exercise {
     }
     public void check(int userAnswer){
         if(answer == userAnswer){
-            score += 5 * currentDiff;
-            exerciseListener.correct(score);
+            user.incScore(5 * currentDiff);
+            exerciseListener.correct(user.getScore());
         }
         else {
             exerciseListener.incorrect();
         }
     }
+
 
 }
