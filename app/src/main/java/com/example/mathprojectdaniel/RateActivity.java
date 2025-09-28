@@ -1,5 +1,6 @@
 package com.example.mathprojectdaniel;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -8,7 +9,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.slider.Slider;
+
 public class RateActivity extends AppCompatActivity {
+
+    Slider rateSl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,5 +25,11 @@ public class RateActivity extends AppCompatActivity {
             return insets;
         });
 
+        rateSl = findViewById(R.id.rating);
+        Intent inn = new Intent();
+        inn.putExtra("rating", rateSl.getValue());
+        setResult(RESULT_OK, inn);
+        finish();
     }
+
 }

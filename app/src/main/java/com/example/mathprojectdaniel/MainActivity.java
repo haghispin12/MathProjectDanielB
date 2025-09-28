@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity{
     private  Button checkBtn;
     private Button saveBtn;
     private Button showAllUsersBtn;
+    private Button rateBtn;
+    private ActivityResultLauncher<Intent> registeredListener;
     protected ExerciseListener exerciseListener;
     protected Exercise exercise;
     protected Toast toaster;
@@ -46,10 +49,8 @@ public class MainActivity extends AppCompatActivity{
         });
 
         init();
-        toaster.setText("Welcome, " + getIntent().getStringExtra("username"));
-        toaster.show();
+        welcomeUser();
         CreateOnClickListeners();
-        //startLogin()
     }
 
     public void init(){
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity{
         checkBtn = findViewById(R.id.check);
         saveBtn = findViewById(R.id.save);
         showAllUsersBtn = findViewById(R.id.showAllUsers);
+        rateBtn = findViewById(R.id.openRate);
+        registeredListener = startRegistry();
         user = new User(getIntent().getStringExtra("username"));
 
         exerciseListener = new ExerciseListener() {
@@ -88,16 +91,24 @@ public class MainActivity extends AppCompatActivity{
         toaster = new Toast(this);
         toaster.setDuration(Toast.LENGTH_SHORT);
     }
-    /*public void startLogin(){
-        Intent intent = new Intent(this, LoginActivity.class);
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-        new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                checkUserName(result.getData().getStringExtra("username", ));
-            }
-        }).launch(intent);
-    }*/
+    public void startRate(){
+        Intent intent = new Intent(this, RateActivity.class);
+        registeredListener.launch(intent);
+    }
+    public ActivityResultLauncher<Intent> startRegistry(){
+        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        int rating = result.getData().getIntExtra("rating", -1);
+                        if(rating != -1)
+                            toaster.setText("Thanks for the " + rating + " rating!");
+                        else
+                            toaster.setText("error receiving rating");
+                        toaster.show();
+                    }
+                });
+    }
     public void CreateOnClickListeners(){
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,18 +146,15 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
-    }
-    /*public User checkUserName(String name){
-        User user = null;
-        for (int i=0; i<userCount; i++){
-            if (name.equals(users[i].getName())){
-                user = users[i];
-                return user;
+        rateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startRate();
             }
-        }
-        user = new User("name");
-        users[userCount] = user;
-        userCount++;
-        return user;
-    }*/
+        });
+    }
+    public void welcomeUser(){
+        toaster.setText("Welcome, " + getIntent().getStringExtra("username"));
+        toaster.show();
+    }
 }
