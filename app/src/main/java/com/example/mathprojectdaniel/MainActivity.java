@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity{
         });
 
         init();
+        toaster.setText("Welcome, " + getIntent().getStringExtra("username"));
+        toaster.show();
         CreateOnClickListeners();
         //startLogin();
     }
