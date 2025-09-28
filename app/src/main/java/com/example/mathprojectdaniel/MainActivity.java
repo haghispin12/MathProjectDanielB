@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
         toaster.setText("Welcome, " + getIntent().getStringExtra("username"));
         toaster.show();
         CreateOnClickListeners();
-        //startLogin();
+        //startLogin()
     }
 
     public void init(){
