@@ -2,6 +2,10 @@ package com.example.mathprojectdaniel;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.DragEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +17,8 @@ import com.google.android.material.slider.Slider;
 
 public class RateActivity extends AppCompatActivity {
 
-    Slider rateSl;
+    private Slider rateSl;
+    private Button submitBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,10 +31,17 @@ public class RateActivity extends AppCompatActivity {
         });
 
         rateSl = findViewById(R.id.rating);
-        Intent inn = new Intent();
-        inn.putExtra("rating", rateSl.getValue());
-        setResult(RESULT_OK, inn);
-        finish();
+        submitBtn = findViewById(R.id.submitRate);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent inn = new Intent();
+                inn.putExtra("rating", rateSl.getValue());
+                setResult(RESULT_OK, inn);
+                finish();
+            }
+        });
+
     }
 
 }

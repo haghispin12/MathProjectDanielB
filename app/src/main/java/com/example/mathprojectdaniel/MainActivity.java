@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity{
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        int rating = result.getData().getIntExtra("rating", -1);
+                        float rating = result.getData().getFloatExtra("rating", -1);
                         if(rating != -1)
                             toaster.setText("Thanks for the " + rating + " rating!");
                         else
