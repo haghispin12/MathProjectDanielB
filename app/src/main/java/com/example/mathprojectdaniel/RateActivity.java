@@ -36,7 +36,7 @@ public class RateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent inn = new Intent();
-                inn.putExtra("rating", rateSl.getValue());
+                inn.putExtra("rating", (float)Math.floor(rateSl.getValue()*100)/10);
                 setResult(RESULT_OK, inn);
                 finish();
             }
