@@ -1,6 +1,7 @@
 package com.example.mathprojectdaniel;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputET;
     private Button submitBtn;
     private Intent intent;
+    private SharedPreferences sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         init();
+        setSPAsText();
         setOnClickListeners();
     }
 
@@ -36,15 +39,20 @@ public class LoginActivity extends AppCompatActivity {
         inputET = findViewById(R.id.login);
         submitBtn = findViewById(R.id.submit);
         intent = new Intent(this, MainActivity.class);
+        sp = getSharedPreferences("name", MODE_PRIVATE);
     }
     public void setOnClickListeners(){
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sp.edit().putString("username", inputET.getText().toString()).apply();
                 intent.putExtra("username",inputET.getText().toString());
                 startActivity(intent);
                 finish();
             }
         });
+    }
+    public void setSPAsText(){
+        inputET.setText(sp.getString("username",""));
     }
 }

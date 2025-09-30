@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultCallerLauncher;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,7 +67,17 @@ public class MainActivity extends AppCompatActivity{
         saveBtn = findViewById(R.id.save);
         showAllUsersBtn = findViewById(R.id.showAllUsers);
         rateBtn = findViewById(R.id.openRate);
-        registeredListener = startRegistry();
+        registeredListener = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                float rating = result.getData().getFloatExtra("rating", -1);
+                if(rating != -1)
+                    toaster.setText("Thanks for the " + rating + " rating!");
+                else
+                    toaster.setText("error receiving rating");
+                toaster.show();
+            }
+        });
         user = new User(getIntent().getStringExtra("username"));
 
         exerciseListener = new ExerciseListener() {
@@ -98,20 +107,7 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = new Intent(this, RateActivity.class);
         registeredListener.launch(intent);
     }
-    public ActivityResultLauncher<Intent> startRegistry(){
-        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        float rating = result.getData().getFloatExtra("rating", -1);
-                        if(rating != -1)
-                            toaster.setText("Thanks for the " + rating + " rating!");
-                        else
-                            toaster.setText("error receiving rating");
-                        toaster.show();
-                    }
-                });
-    }
+
     public void CreateOnClickListeners(){
         easyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
