@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         init();
+        inputET.setText(sp.getString("username", ""));
         setSPAsText();
         setOnClickListeners();
     }
