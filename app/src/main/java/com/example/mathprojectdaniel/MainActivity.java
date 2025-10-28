@@ -17,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -142,7 +146,14 @@ public class MainActivity extends AppCompatActivity{
         showAllUsersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle b = new Bundle();
+                Gson gson = new Gson();
+                String  stringUser = gson.toJson(user);
+                b.putString("user", stringUser);
+                ShowUsersFragment SUF = new ShowUsersFragment();
+                SUF.setArguments(b);
 
+                getSupportFragmentManager().beginTransaction().add(R.id.main, SUF).commit();
             }
         });
         rateBtn.setOnClickListener(new View.OnClickListener() {
@@ -156,4 +167,5 @@ public class MainActivity extends AppCompatActivity{
         toaster.setText("Welcome, " + getIntent().getStringExtra("username"));
         toaster.show();
     }
+    public int getUserScore(){return user.getScore();}
 }

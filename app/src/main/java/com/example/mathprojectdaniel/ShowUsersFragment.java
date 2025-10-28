@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -15,13 +17,35 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class ShowUsersFragment extends Fragment {
-    TextView score;
+
+    EditText editNameET;
+    TextView ratingTV;
+    TextView scoreTV;
+    Button addImageBtn;
+    Button addUserBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View viw=inflater.inflate(R.layout.fragment_showusers, container, false);
-        score = viw.findViewById();
+        editNameET = viw.findViewById(R.id.editUserName);
+        ratingTV = viw.findViewById(R.id.showUserRating);
+        scoreTV = viw.findViewById(R.id.showUserScore);
+        addImageBtn = viw.findViewById(R.id.addImage);
+        addUserBtn = viw.findViewById(R.id.addUser);
+        addImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        addUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
 
 
