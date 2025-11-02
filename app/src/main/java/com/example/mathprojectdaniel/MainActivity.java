@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 
@@ -35,7 +33,7 @@ public class MainActivity extends AppCompatActivity{
     private Button saveBtn;
     private Button showAllUsersBtn;
     private Button rateBtn;
-    private ActivityResultLauncher<Intent> registeredListener;
+    private ActivityResultLauncher<Intent> registeredListenerForRate;
     protected ExerciseListener exerciseListener;
     protected Exercise exercise;
     protected Toast toaster;
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity{
         saveBtn = findViewById(R.id.save);
         showAllUsersBtn = findViewById(R.id.showAllUsers);
         rateBtn = findViewById(R.id.openRate);
-        registeredListener = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        registeredListenerForRate = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 float rating = result.getData().getFloatExtra("rating", -1);
@@ -107,13 +105,6 @@ public class MainActivity extends AppCompatActivity{
         exercise = new Exercise(exerciseListener, user);
         toaster = new Toast(this);
         toaster.setDuration(Toast.LENGTH_SHORT);
-    }
-    public void startRate(){
-        Intent intent = new Intent(this, RateActivity.class);
-        Gson gson = new Gson();
-        String SU = gson.toJson(user);
-        intent.putExtra("user", SU);
-        registeredListener.launch(intent);
     }
 
     public void CreateOnClickListeners(){
@@ -163,7 +154,8 @@ public class MainActivity extends AppCompatActivity{
         rateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startRate();
+                Intent intent = new Intent(MainActivity.this, RateActivity.class);
+                registeredListenerForRate.launch(intent);
             }
         });
     }
