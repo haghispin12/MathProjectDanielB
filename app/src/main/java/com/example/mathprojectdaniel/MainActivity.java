@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onActivityResult(ActivityResult result) {
                 float rating = result.getData().getFloatExtra("rating", -1);
+                user.setRating(rating);
                 if(rating != -1)
                     toaster.setText("Thanks for the " + rating + " rating!");
                 else
@@ -109,6 +110,9 @@ public class MainActivity extends AppCompatActivity{
     }
     public void startRate(){
         Intent intent = new Intent(this, RateActivity.class);
+        Gson gson = new Gson();
+        String SU = gson.toJson(user);
+        intent.putExtra("user", SU);
         registeredListener.launch(intent);
     }
 

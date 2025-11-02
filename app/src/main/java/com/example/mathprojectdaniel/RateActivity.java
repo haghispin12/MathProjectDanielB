@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.slider.Slider;
+import com.google.gson.Gson;
 
 public class RateActivity extends AppCompatActivity {
 

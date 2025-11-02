@@ -9,13 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ShowUsersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.gson.Gson;
+
 public class ShowUsersFragment extends Fragment {
 
     EditText editNameET;
@@ -23,6 +21,9 @@ public class ShowUsersFragment extends Fragment {
     TextView scoreTV;
     Button addImageBtn;
     Button addUserBtn;
+    ImageView profile;
+    Gson gson;
+    User user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,6 +34,10 @@ public class ShowUsersFragment extends Fragment {
         scoreTV = viw.findViewById(R.id.showUserScore);
         addImageBtn = viw.findViewById(R.id.addImage);
         addUserBtn = viw.findViewById(R.id.addUser);
+        profile = viw.findViewById(R.id.image);
+        gson = new Gson();
+        user = gson.fromJson(getArguments().getString("user"), User.class);
+
         addImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,10 +50,15 @@ public class ShowUsersFragment extends Fragment {
 
             }
         });
-
+        setUserData();
 
 
 
         return viw;
+    }
+    public void setUserData(){
+        editNameET.setText(user.getName());
+        ratingTV.setText("" + user.getRating());
+        scoreTV.setText("" + user.getScore());
     }
 }
