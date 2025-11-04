@@ -61,6 +61,7 @@ public class ShowUsersFragment extends Fragment {
 
         return viw;
     }
+    //public ShowUsersFragment(User user){this.user = user;}
     public void setUserData(){
         editNameET.setText(user.getName());
         ratingTV.setText("" + user.getRating());
