@@ -38,6 +38,7 @@ public class ShowAllFruits extends AppCompatActivity {
         });
 
         showFruitsRV.setLayoutManager(new LinearLayoutManager(this));
+        showFruitsRV.setAdapter(myFruitsAdapter);
         showFruitsRV.setHasFixedSize(true);
     }
 }
