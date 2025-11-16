@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-public class ShowUsersFragment extends Fragment {
+public class UserActivity extends Fragment {
 
     private EditText editNameET;
     private TextView ratingTV;
@@ -38,7 +38,7 @@ public class ShowUsersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View viw=inflater.inflate(R.layout.fragment_showusers, container, false);
+        View viw=inflater.inflate(R.layout.view_user, container, false);
         editNameET = viw.findViewById(R.id.editUserName);
         ratingTV = viw.findViewById(R.id.showUserRating);
         scoreTV = viw.findViewById(R.id.showUserScore);

@@ -150,7 +150,9 @@ public class MainActivity extends AppCompatActivity{
 
                 getSupportFragmentManager().beginTransaction().add(R.id.main, SUF).commit();*/
 
-                startActivity(new Intent(MainActivity.this, ShowAllFruits.class));
+                //startActivity(new Intent(MainActivity.this, ShowAllFruits.class));
+
+                user.dbAddUser(MainActivity.this);
             }
         });
         rateBtn.setOnClickListener(new View.OnClickListener() {
