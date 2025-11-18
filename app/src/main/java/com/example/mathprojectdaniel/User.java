@@ -24,6 +24,9 @@ public class User {
         id=1L;
         profile = null;
     }
+    public User(Long id, String name, float rating, Uri profile, int score){
+
+    }
     public int getScore() {
         return score;
     }

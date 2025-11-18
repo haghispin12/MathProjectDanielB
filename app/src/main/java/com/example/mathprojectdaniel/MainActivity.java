@@ -141,18 +141,18 @@ public class MainActivity extends AppCompatActivity{
         showAllUsersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Bundle b = new Bundle();
+                Bundle b = new Bundle();
                 Gson gson = new Gson();
                 String  stringUser = gson.toJson(user);
                 b.putString("user", stringUser);
-                ShowUsersFragment SUF = new ShowUsersFragment();
+                ShowAllUsers SUF = new ShowAllUsers();
                 SUF.setArguments(b);
 
-                getSupportFragmentManager().beginTransaction().add(R.id.main, SUF).commit();*/
+                getSupportFragmentManager().beginTransaction().add(R.id.main, SUF).commit();
 
                 //startActivity(new Intent(MainActivity.this, ShowAllFruits.class));
 
-                user.dbAddUser(MainActivity.this);
+                //user.dbAddUser(MainActivity.this);
             }
         });
         rateBtn.setOnClickListener(new View.OnClickListener() {

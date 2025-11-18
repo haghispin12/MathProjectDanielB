@@ -1,5 +1,7 @@
 package com.example.mathprojectdaniel;
 
+import static java.lang.System.out;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,10 +11,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -83,6 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
         long id = database.insert(TABLE_RECORD, null, values);
         user.setId(id);
         database.close();
+        Toast.makeText(context, ""+id , Toast.LENGTH_SHORT).show();
         return id;
     }
 
@@ -108,14 +114,18 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, user.getName());
         values.put(COLUMN_RATE, user.getRating());
         // stored as Binary Large OBject ->  BLOB
-        values.put(COLUMN_PICTURE, getBytes(user.getBitmap(c)));
+        try {
+            values.put(COLUMN_PICTURE, getBytes(c,user.getProfile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         database.update(TABLE_RECORD, values, COLUMN_ID + "=" + user.getId(), null);
         database.close();
 
     }
 
     // return all rows in table
-    /*public ArrayList<User> selectAll(){
+    public ArrayList<User> selectAll(){
         database = getReadableDatabase(); // get access to read the database
         ArrayList<User> users = new ArrayList<>();
         Cursor cursor = database.query(TABLE_RECORD, allColumns, null, null, null, null, null); // cursor points at a certain row
@@ -128,7 +138,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 Bitmap bitmap = getImage(bytes);
                 long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
-                User user= new User(id,name,rating,bitmap,score);
+                User user= new User(id,name,rating,getUri(c, bitmap),score);
                 users.add(user);
             }
         }
@@ -169,13 +179,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
                 Bitmap bitmap = getImage(bytes);
                 long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
-                User user= new User(id,name,rating,bitmap,score);
+                User user= new User(id,name,rating,getUri(c, bitmap),score);
                 users.add(user);
             }// end while
         } // end if
         database.close();
         return users;
-    }*/
+    }
 
     public static byte[] getBytes(Context context, Uri uri) throws IOException {
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(),uri);
@@ -192,6 +202,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return stream.toByteArray();
     }
 
+    public static Uri getUri(Context context, Bitmap bitmap){
+        File file = new File(context.getCacheDir(),"Image_" + System.currentTimeMillis() + ".jpeg");
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100, out);
+        out.close();
+        return FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+    }
     // convert from byte array to bitmap
     private  Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
