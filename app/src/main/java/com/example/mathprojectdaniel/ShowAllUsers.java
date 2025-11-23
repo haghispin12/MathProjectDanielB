@@ -11,6 +11,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -20,8 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 public class ShowAllUsers extends Fragment {
 
@@ -31,23 +36,26 @@ public class ShowAllUsers extends Fragment {
     private Button addImageBtn;
     private Button addUserBtn;
     private ImageView profile;
+    private RecyclerView RV;
     private Gson gson;
     private User user;
     private Uri uri;
     private ActivityResultLauncher<Intent> registeredListenerForImage;
     private DBHelper SQLite;
+    private ArrayList<User> userList;
     private Context c;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View viw=inflater.inflate(R.layout.view_user, container, false);
+        View viw=inflater.inflate(R.layout.show_all_users, container, false);
         editNameET = viw.findViewById(R.id.editUserName);
         ratingTV = viw.findViewById(R.id.showUserRating);
         scoreTV = viw.findViewById(R.id.showUserScore);
         addImageBtn = viw.findViewById(R.id.addImage);
         addUserBtn = viw.findViewById(R.id.addUser);
         profile = viw.findViewById(R.id.image);
+        userList = SQLite.selectAll();
         gson = new Gson();
         user = gson.fromJson(getArguments().getString("user"), User.class);
 
@@ -63,7 +71,14 @@ public class ShowAllUsers extends Fragment {
 
         setUserData();
         setOnClickListeners();
-
+        RV.setLayoutManager(new LinearLayoutManager(c));
+        RV.setAdapter(new MyUsersAdapter(userList, new MyUsersAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(User item) {
+                Toast.makeText(c,item.getName(),Toast.LENGTH_SHORT).show();
+            }
+        }));
+        RV.setHasFixedSize(true);
 
         return viw;
     }
@@ -91,6 +106,7 @@ public class ShowAllUsers extends Fragment {
             public void onClick(View v) {
                 SQLite = new DBHelper(c);
                 SQLite.insert(user, c);
+                userList = SQLite.selectAll();
             }
         });
     }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.MutableLiveData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,6 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
             COLUMN_PICTURE + " BLOB );";
 
     private SQLiteDatabase database; // access to table
+    private MutableLiveData<ArrayList<User>> userList;
     private Context c;
 
     public DBHelper(@Nullable Context context) {
