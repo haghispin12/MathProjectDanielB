@@ -49,12 +49,15 @@ public class ShowAllUsers extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View viw=inflater.inflate(R.layout.show_all_users, container, false);
+        c = viw.getContext();
         editNameET = viw.findViewById(R.id.editUserName);
         ratingTV = viw.findViewById(R.id.showUserRating);
         scoreTV = viw.findViewById(R.id.showUserScore);
         addImageBtn = viw.findViewById(R.id.addImage);
         addUserBtn = viw.findViewById(R.id.addUser);
         profile = viw.findViewById(R.id.image);
+        SQLite = new DBHelper(c);
+        RV = viw.findViewById(R.id.user_recycle_view);
         userList = SQLite.selectAll();
         gson = new Gson();
         user = gson.fromJson(getArguments().getString("user"), User.class);
@@ -66,8 +69,6 @@ public class ShowAllUsers extends Fragment {
                 user.setProfile(uri);
             }
         });
-
-        c = viw.getContext();
 
         setUserData();
         setOnClickListeners();

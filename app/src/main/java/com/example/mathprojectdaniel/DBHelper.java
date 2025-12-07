@@ -133,13 +133,13 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = database.query(TABLE_RECORD, allColumns, null, null, null, null, null); // cursor points at a certain row
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_RATE));
-                int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
-                byte[] bytes = cursor.getBlob(cursor.getColumnIndex(COLUMN_PICTURE));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
+                int rating = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RATE));
+                int score = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SCORE));
+                byte[] bytes = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PICTURE));
 
                 Bitmap bitmap = getImage(bytes);
-                long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
                 User user= new User(id,name,rating,getUri(c, bitmap),score);
                 users.add(user);
             }
@@ -204,7 +204,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return stream.toByteArray();
     }
 
-    public static Uri getUri(Context context, Bitmap bitmap){
+    public Uri getUri(Context context, Bitmap bitmap){
         File file = new File(context.getCacheDir(),"Image_" + System.currentTimeMillis() + ".jpeg");
         bitmap.compress(Bitmap.CompressFormat.JPEG,100, out);
         out.close();
