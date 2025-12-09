@@ -3,8 +3,6 @@ package com.example.mathprojectdaniel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +30,7 @@ public class MyUsersAdapter extends RecyclerView.Adapter<MyUsersAdapter.MyViewHo
     @Override
     public MyUsersAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.show_all_users, parent, false);
+                .inflate(R.layout.view_user, parent, false);
 
         return new MyUsersAdapter.MyViewHolder(view);
     }
@@ -55,28 +53,21 @@ public class MyUsersAdapter extends RecyclerView.Adapter<MyUsersAdapter.MyViewHo
      */
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
-        private EditText editNameET;
-        private TextView ratingTV;
+        private TextView nameTV;
         private TextView scoreTV;
-        private Button addImageBtn;
-        private Button addUserBtn;
         private ImageView profile;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            editNameET = itemView.findViewById(R.id.editUserName);
-            ratingTV = itemView.findViewById(R.id.showUserRating);
-            scoreTV = itemView.findViewById(R.id.showUserScore);
-            addImageBtn = itemView.findViewById(R.id.addImage);
-            addUserBtn = itemView.findViewById(R.id.addUser);
-            profile = itemView.findViewById(R.id.image);
+            nameTV = itemView.findViewById(R.id.showUserName);
+            scoreTV = itemView.findViewById(R.id.showUserScoreModule);
+            profile = itemView.findViewById(R.id.imageModule);
         }
 
         public void bind(final User item, final MyUsersAdapter.OnItemClickListener listener){
-            editNameET.setText(item.getName());
-            ratingTV.setText("" + item.getRating());
+            nameTV.setText(item.getName());
             scoreTV.setText("" + item.getScore());
-            profile.setImageURI(item.getProfile());
+            profile.setImageBitmap(item.getProfileBitmap());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(item);

@@ -1,15 +1,7 @@
 package com.example.mathprojectdaniel;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 public class User {
     private String name;
@@ -17,6 +9,7 @@ public class User {
     private int score;
     private float rating;
     private Uri profile;
+    private Bitmap ProfileBitmap;
     public User(String name){
         this.name = name;
         score = 0;
@@ -24,8 +17,12 @@ public class User {
         id=1L;
         profile = null;
     }
-    public User(Long id, String name, float rating, Uri profile, int score){
-
+    public User(Long id, String name, float rating, Bitmap profile, int score){
+        this.id = id;
+        this.name = name;
+        this.rating = rating;
+        this.ProfileBitmap = profile;
+        this.score = score;
     }
     public int getScore() {
         return score;
@@ -42,6 +39,7 @@ public class User {
     public float getRating() {return rating;}
 
     public Uri getProfile() {return profile;}
+    public Bitmap getProfileBitmap() {return ProfileBitmap;}
 
     public void setName(String name) {
         this.name = name;

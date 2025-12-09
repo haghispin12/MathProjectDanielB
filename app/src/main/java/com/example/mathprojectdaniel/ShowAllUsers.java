@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +59,7 @@ public class ShowAllUsers extends Fragment {
         addImageBtn = viw.findViewById(R.id.addImage);
         addUserBtn = viw.findViewById(R.id.addUser);
         profile = viw.findViewById(R.id.image);
-        SQLite = new DBHelper(c);
         RV = viw.findViewById(R.id.user_recycle_view);
-        userList = SQLite.selectAll();
         gson = new Gson();
         user = gson.fromJson(getArguments().getString("user"), User.class);
 
@@ -72,14 +73,7 @@ public class ShowAllUsers extends Fragment {
 
         setUserData();
         setOnClickListeners();
-        RV.setLayoutManager(new LinearLayoutManager(c));
-        RV.setAdapter(new MyUsersAdapter(userList, new MyUsersAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(User item) {
-                Toast.makeText(c,item.getName(),Toast.LENGTH_SHORT).show();
-            }
-        }));
-        RV.setHasFixedSize(true);
+        startAdapter();
 
         return viw;
     }
@@ -107,8 +101,35 @@ public class ShowAllUsers extends Fragment {
             public void onClick(View v) {
                 SQLite = new DBHelper(c);
                 SQLite.insert(user, c);
-                userList = SQLite.selectAll();
+                startAdapter();
             }
         });
+        editNameET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                user.setName("" + editNameET.getText());
+            }
+        });
+    }
+    public void startAdapter(){
+        SQLite = new DBHelper(c);
+        userList = SQLite.selectAll();
+
+        RV.setLayoutManager(new LinearLayoutManager(c));
+        RV.setHasFixedSize(true);
+        RV.setAdapter(new MyUsersAdapter(userList, new MyUsersAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(User item) {
+                Toast.makeText(c,item.getName(),Toast.LENGTH_SHORT).show();
+            }
+        }));
     }
 }

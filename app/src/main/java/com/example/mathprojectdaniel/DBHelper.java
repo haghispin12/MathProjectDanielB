@@ -11,6 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.Layout;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -91,6 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
         user.setId(id);
         database.close();
         Toast.makeText(context, ""+id , Toast.LENGTH_SHORT).show();
+
         return id;
     }
 
@@ -140,7 +144,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 Bitmap bitmap = getImage(bytes);
                 long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                User user= new User(id,name,rating,getUri(c, bitmap),score);
+                User user= new User(id,name,rating,bitmap,score);
                 users.add(user);
             }
         }
@@ -178,10 +182,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
                 int rating = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RATE));
                 byte[] bytes = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PICTURE));
-                int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
+                int score = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SCORE));
                 Bitmap bitmap = getImage(bytes);
-                long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
-                User user= new User(id,name,rating,getUri(c, bitmap),score);
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                User user= new User(id,name,rating,bitmap,score);
                 users.add(user);
             }// end while
         } // end if
