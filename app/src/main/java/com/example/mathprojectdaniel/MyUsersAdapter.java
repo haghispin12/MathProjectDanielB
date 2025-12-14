@@ -15,14 +15,19 @@ public class MyUsersAdapter extends RecyclerView.Adapter<MyUsersAdapter.MyViewHo
     public interface OnItemClickListener {
         void onItemClick(User item);
     }
+    public interface OnItemLongClickListener{
+        void onItemLongClick(User item);
+    }
 
     private ArrayList<User> users;
     private MyUsersAdapter.OnItemClickListener listener;
+    private MyUsersAdapter.OnItemLongClickListener longClickListener;
 
 
-    public MyUsersAdapter  (ArrayList<User> users, MyUsersAdapter.OnItemClickListener listener) {
+    public MyUsersAdapter  (ArrayList<User> users, MyUsersAdapter.OnItemClickListener listener, MyUsersAdapter.OnItemLongClickListener longClickListener) {
         this.users = users;
         this.listener = listener;
+        this.longClickListener = longClickListener;
     }
 
     //
@@ -38,7 +43,7 @@ public class MyUsersAdapter extends RecyclerView.Adapter<MyUsersAdapter.MyViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull MyUsersAdapter.MyViewHolder holder, int position) {
-        holder.bind(users.get(position), listener);
+        holder.bind(users.get(position), listener, longClickListener);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -64,7 +69,7 @@ public class MyUsersAdapter extends RecyclerView.Adapter<MyUsersAdapter.MyViewHo
             profile = itemView.findViewById(R.id.imageModule);
         }
 
-        public void bind(final User item, final MyUsersAdapter.OnItemClickListener listener){
+        public void bind(final User item, final MyUsersAdapter.OnItemClickListener listener, final MyUsersAdapter.OnItemLongClickListener longClickListener){
             nameTV.setText(item.getName());
             scoreTV.setText("" + item.getScore());
             profile.setImageBitmap(item.getProfileBitmap());
@@ -72,6 +77,9 @@ public class MyUsersAdapter extends RecyclerView.Adapter<MyUsersAdapter.MyViewHo
                 @Override public void onClick(View v) {
                     listener.onItemClick(item);
                 }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener(){
+                @Override public boolean onLongClick(View v){longClickListener.onItemLongClick(item); return false;}
             });
         }
 

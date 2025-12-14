@@ -10,7 +10,11 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +23,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -38,15 +45,19 @@ public class ShowAllUsers extends Fragment {
     private TextView scoreTV;
     private Button addImageBtn;
     private Button addUserBtn;
+    private Button editUserBtn;
+    private Button deleteUserBtn;
     private ImageView profile;
     private RecyclerView RV;
     private Gson gson;
     private User user;
+    private User selectedUser;
     private Uri uri;
     private ActivityResultLauncher<Intent> registeredListenerForImage;
     private DBHelper SQLite;
     private ArrayList<User> userList;
     private Context c;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +69,10 @@ public class ShowAllUsers extends Fragment {
         scoreTV = viw.findViewById(R.id.showUserScore);
         addImageBtn = viw.findViewById(R.id.addImage);
         addUserBtn = viw.findViewById(R.id.addUser);
+        editUserBtn = viw.findViewById(R.id.edit_user);
+        editUserBtn.setVisibility(View.INVISIBLE);
+        deleteUserBtn = viw.findViewById(R.id.delete_user);
+        deleteUserBtn.setVisibility(View.INVISIBLE);
         profile = viw.findViewById(R.id.image);
         RV = viw.findViewById(R.id.user_recycle_view);
         gson = new Gson();
@@ -74,7 +89,6 @@ public class ShowAllUsers extends Fragment {
         setUserData();
         setOnClickListeners();
         startAdapter();
-
         return viw;
     }
     //public ShowUsersFragment(User user){this.user = user;}
@@ -104,6 +118,28 @@ public class ShowAllUsers extends Fragment {
                 startAdapter();
             }
         });
+        editUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLite = new DBHelper(c);
+                SQLite.update(selectedUser);
+
+                editUserBtn.setVisibility(View.INVISIBLE);
+                deleteUserBtn.setVisibility(View.INVISIBLE);
+            }
+        });
+        deleteUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLite = new DBHelper(c);
+                SQLite.deleteById(selectedUser.getId());
+
+                startAdapter();
+
+                editUserBtn.setVisibility(View.INVISIBLE);
+                deleteUserBtn.setVisibility(View.INVISIBLE);
+            }
+        });
         editNameET.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -129,6 +165,14 @@ public class ShowAllUsers extends Fragment {
             @Override
             public void onItemClick(User item) {
                 Toast.makeText(c,item.getName(),Toast.LENGTH_SHORT).show();
+            }
+        }, new MyUsersAdapter.OnItemLongClickListener(){
+            @Override
+            public void onItemLongClick(User user){
+                selectedUser = user;
+                editUserBtn.setVisibility(View.VISIBLE);
+                deleteUserBtn.setVisibility(View.VISIBLE);
+
             }
         }));
     }
