@@ -120,11 +120,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, user.getName());
         values.put(COLUMN_RATE, user.getRating());
         // stored as Binary Large OBject ->  BLOB
-        try {
-            values.put(COLUMN_PICTURE, getBytes(c,user.getProfile()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        values.put(COLUMN_PICTURE, getBytes(user.getProfileBitmap()));
         database.update(TABLE_RECORD, values, COLUMN_ID + "=" + user.getId(), null);
         database.close();
 

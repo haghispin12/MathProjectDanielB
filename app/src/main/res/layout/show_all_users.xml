@@ -5,13 +5,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:clickable="true">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:weightSum="6">
+        android:weightSum="6"
+        android:layout_marginTop="30dp">
 
         <EditText
             android:layout_width="0dp"

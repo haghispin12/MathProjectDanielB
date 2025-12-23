@@ -16,6 +16,7 @@ public class User {
         rating = 0;
         id=1L;
         profile = null;
+        ProfileBitmap = null;
     }
     public User(Long id, String name, float rating, Bitmap profile, int score){
         this.id = id;

@@ -50,7 +50,7 @@ public class ShowAllUsers extends Fragment {
     private ImageView profile;
     private RecyclerView RV;
     private Gson gson;
-    private User user;
+    private User myUser;
     private User selectedUser;
     private Uri uri;
     private ActivityResultLauncher<Intent> registeredListenerForImage;
@@ -76,26 +76,25 @@ public class ShowAllUsers extends Fragment {
         profile = viw.findViewById(R.id.image);
         RV = viw.findViewById(R.id.user_recycle_view);
         gson = new Gson();
-        user = gson.fromJson(getArguments().getString("user"), User.class);
+        myUser = gson.fromJson(getArguments().getString("user"), User.class);
+        selectedUser = myUser;
 
         registeredListenerForImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 profile.setImageURI(uri);
-                user.setProfile(uri);
+                selectedUser.setProfile(uri);
             }
         });
 
-        setUserData();
+        setUserData(selectedUser);
         setOnClickListeners();
         startAdapter();
         return viw;
     }
     //public ShowUsersFragment(User user){this.user = user;}
-    public void setUserData(){
-        editNameET.setText(user.getName());
-        ratingTV.setText("" + user.getRating());
-        scoreTV.setText("" + user.getScore());
+    public void setUserData(User u){
+        editNameET.setText(u.getName());
     }
     public void setOnClickListeners(){
         addImageBtn.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +113,7 @@ public class ShowAllUsers extends Fragment {
             @Override
             public void onClick(View v) {
                 SQLite = new DBHelper(c);
-                SQLite.insert(user, c);
+                SQLite.insert(myUser, c);
                 startAdapter();
             }
         });
@@ -124,8 +123,15 @@ public class ShowAllUsers extends Fragment {
                 SQLite = new DBHelper(c);
                 SQLite.update(selectedUser);
 
-                editUserBtn.setVisibility(View.INVISIBLE);
-                deleteUserBtn.setVisibility(View.INVISIBLE);
+                startAdapter();
+
+                selectedUser = myUser;
+                setUserData(selectedUser);
+                editUserBtn.setVisibility(View.GONE);
+                deleteUserBtn.setVisibility(View.GONE);
+                profile.setVisibility(View.VISIBLE);
+                addUserBtn.setVisibility(View.VISIBLE);
+                addImageBtn.setVisibility(View.VISIBLE);
             }
         });
         deleteUserBtn.setOnClickListener(new View.OnClickListener() {
@@ -136,8 +142,13 @@ public class ShowAllUsers extends Fragment {
 
                 startAdapter();
 
-                editUserBtn.setVisibility(View.INVISIBLE);
-                deleteUserBtn.setVisibility(View.INVISIBLE);
+                selectedUser = myUser;
+                setUserData(selectedUser);
+                editUserBtn.setVisibility(View.GONE);
+                deleteUserBtn.setVisibility(View.GONE);
+                profile.setVisibility(View.VISIBLE);
+                addUserBtn.setVisibility(View.VISIBLE);
+                addImageBtn.setVisibility(View.VISIBLE);
             }
         });
         editNameET.addTextChangedListener(new TextWatcher() {
@@ -151,7 +162,7 @@ public class ShowAllUsers extends Fragment {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                user.setName("" + editNameET.getText());
+                selectedUser.setName("" + editNameET.getText());
             }
         });
     }
@@ -170,9 +181,12 @@ public class ShowAllUsers extends Fragment {
             @Override
             public void onItemLongClick(User user){
                 selectedUser = user;
+                addUserBtn.setVisibility(View.GONE);
+                addImageBtn.setVisibility(View.GONE);
+                profile.setVisibility(View.GONE);
                 editUserBtn.setVisibility(View.VISIBLE);
                 deleteUserBtn.setVisibility(View.VISIBLE);
-
+                setUserData(selectedUser);
             }
         }));
     }
