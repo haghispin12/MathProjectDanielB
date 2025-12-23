@@ -1,7 +1,11 @@
 package com.example.mathprojectdaniel;
 
+import static org.jetbrains.annotations.Nls.Capitalization.Title;
+
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,6 +58,7 @@ public class ShowAllUsers extends Fragment {
     private User selectedUser;
     private Uri uri;
     private ActivityResultLauncher<Intent> registeredListenerForImage;
+    private AlertDialog.Builder alertDialog;
     private DBHelper SQLite;
     private ArrayList<User> userList;
     private Context c;
@@ -86,6 +91,11 @@ public class ShowAllUsers extends Fragment {
                 selectedUser.setProfile(uri);
             }
         });
+        alertDialog = new AlertDialog.Builder(c);
+        alertDialog.setTitle("Delete");
+        alertDialog.setMessage("Do you want to delete?");
+
+
 
         setUserData(selectedUser);
         setOnClickListeners();
@@ -137,18 +147,7 @@ public class ShowAllUsers extends Fragment {
         deleteUserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLite = new DBHelper(c);
-                SQLite.deleteById(selectedUser.getId());
-
-                startAdapter();
-
-                selectedUser = myUser;
-                setUserData(selectedUser);
-                editUserBtn.setVisibility(View.GONE);
-                deleteUserBtn.setVisibility(View.GONE);
-                profile.setVisibility(View.VISIBLE);
-                addUserBtn.setVisibility(View.VISIBLE);
-                addImageBtn.setVisibility(View.VISIBLE);
+                alertDialog.show();
             }
         });
         editNameET.addTextChangedListener(new TextWatcher() {
@@ -163,6 +162,31 @@ public class ShowAllUsers extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 selectedUser.setName("" + editNameET.getText());
+            }
+        });
+
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SQLite = new DBHelper(c);
+                SQLite.deleteById(selectedUser.getId());
+
+                startAdapter();
+
+                selectedUser = myUser;
+                setUserData(selectedUser);
+                editUserBtn.setVisibility(View.GONE);
+                deleteUserBtn.setVisibility(View.GONE);
+                profile.setVisibility(View.VISIBLE);
+                addUserBtn.setVisibility(View.VISIBLE);
+                addImageBtn.setVisibility(View.VISIBLE);
+                dialog.dismiss();
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
     }
